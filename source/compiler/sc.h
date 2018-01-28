@@ -236,6 +236,7 @@ typedef struct s_symbol {
 #define flgDEPRECATED 0x01  /* symbol is deprecated (avoid use) */
 #define flagNAKED     0x10  /* function is naked */
 #define flagPREDEF    0x20  /* symbol is pre-defined; successor of uPREDEF */
+#define flagNODESTRUCT 0x40 /* destructor for the symbol should not be called */
 
 #define uTAGOF    0x40  /* set in the "hasdefault" field of the arginfo struct */
 #define uSIZEOF   0x80  /* set in the "hasdefault" field of the arginfo struct */

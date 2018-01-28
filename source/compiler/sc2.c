@@ -1224,6 +1224,40 @@ static int command(void)
             if (comma)
               lptr++;
           } while (comma);
+        } else if (strcmp(str,"nodestruct")==0) {
+          char name[sNAMEMAX+1];
+          int i,comma;
+          symbol *sym;
+          do {
+            /* get the name */
+            while (*lptr<=' ' && *lptr!='\0')
+              lptr++;
+            for (i=0; i<sizeof name && alphanum(*lptr); i++,lptr++)
+              name[i]=*lptr;
+            name[i]='\0';
+            /* get the symbol */
+            sym=findloc(name);
+            if (sym!=NULL) {
+              if (sym->ident==iVARIABLE || sym->ident==iARRAY)
+                sym->flags |= flagNODESTRUCT;
+              else {
+                /* TODO: error for non-destructable symbols */
+              } /* if */
+            } else {
+              sym=findglb(name,sSTATEVAR);
+              if(sym!=NULL) {
+                /* TODO: global variables may not have destructors */
+              } else {
+                error(17,name);     /* undefined symbol */
+              } /* if */              
+            } /* if */
+              /* see if a comma follows the name */
+            while (*lptr<=' ' && *lptr!='\0')
+              lptr++;
+            comma= (*lptr==',');
+            if (comma)
+              lptr++;
+          } while (comma);
         } else if (strcmp(str,"naked")==0) {
           pc_naked=TRUE;
         } else if (strcmp(str,"warning")==0) {

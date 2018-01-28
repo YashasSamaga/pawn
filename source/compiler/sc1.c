@@ -4861,7 +4861,9 @@ static void destructsymbols(symbol *root,int level)
   int savepri=FALSE;
   symbol *sym=root->next;
   while (sym!=NULL && sym->compound>=level) {
-    if ((sym->ident==iVARIABLE || sym->ident==iARRAY) && !(sym->vclass==sSTATIC && sym->fnumber==-1)) {
+    if ((sym->ident==iVARIABLE || sym->ident==iARRAY)
+      && !(sym->vclass==sSTATIC && sym->fnumber==-1) /* destructors must not be triggered for static locals */
+      && (sym->flags & flagNODESTRUCT)==0) { 
       char symbolname[16];
       symbol *opsym;
       cell elements;
