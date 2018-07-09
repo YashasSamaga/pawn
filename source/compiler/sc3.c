@@ -531,13 +531,16 @@ static int plnge_rel(int *opstr,int opoff,int (*hier)(value *lval),value *lval)
  */
 static int plnge1(int (*hier)(value *lval),value *lval)
 {
-  int lvalue,index;
+  int lvalue,index,prev_pc_sideeffect;
   cell cidx;
 
+  prev_pc_sideeffect = pc_sideeffect;
+  pc_sideeffect = FALSE;
   stgget(&index,&cidx); /* mark position in code generator */
   lvalue=(*hier)(lval);
-  if (lval->ident==iCONSTEXPR)
-    stgdel(index,cidx); /* load constant later */
+  if (lval->ident == iCONSTEXPR && pc_sideeffect == FALSE)
+    stgdel(index, cidx); /* load constant later */
+  pc_sideeffect = prev_pc_sideeffect || pc_sideeffect;
   return lvalue;
 }
 
